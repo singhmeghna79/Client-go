@@ -85,7 +85,7 @@ func main() {
 	pvs, err := clientset.CoreV1().PersistentVolumes().List(meta_v1.ListOptions{})
 
 	for _, pv := range pvs.Items {
-		fmt.Println("PV Name: ", pv.Name)
+		fmt.Println("PV Name: ", pv.Name, "PVC Name: ", pv.Spec.ClaimRef.Name, "PVC Namespace: ", pv.Spec.ClaimRef.Namespace)
 		fmt.Printf(PrettyString(pv))
 		fmt.Println()
 		fmt.Println(strings.Repeat("*", 80))
