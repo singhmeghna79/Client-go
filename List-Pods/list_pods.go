@@ -67,6 +67,24 @@ func PrettyString(in interface{}) string {
 	return string(jsonStr)
 }
 
+// GetPVCLabel returns claim name of the pv
+func GetPVCLabel(pvName string) string {
+	clientset, err := GetClientset()
+	if err != nil {
+		panic(err)
+	}
+
+	pvs, err := clientset.CoreV1().PersistentVolumes().List(meta_v1.ListOptions{})
+
+	for _, pv := range pvs.Items {
+		if pv.Name == pvName {
+			return pv.Spec.ClaimRef.Name
+		}
+	}
+
+	return ""
+}
+
 func main() {
 	clientset, err := GetClientset()
 	if err != nil {
@@ -90,4 +108,7 @@ func main() {
 		fmt.Println()
 		fmt.Println(strings.Repeat("*", 80))
 	}
+
+	claimName := GetPVCLabel("pvc-12fb14c8-4d4e-11e8-bf0c-42010a80014f")
+	fmt.Println("Claim-Name of pvc-12fb14c8-4d4e-11e8-bf0c-42010a80014f : ", claimName)
 }
